@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FAVORITES_KEY = '@coursely_favorites';
+const DARK_MODE_KEY = '@coursely_dark_mode';
 
 export const saveFavorites = async (favorites) => {
   try {
@@ -17,5 +18,23 @@ export const loadFavorites = async () => {
   } catch (error) {
     console.error('Error loading favorites:', error);
     return [];
+  }
+};
+
+export const saveDarkMode = async (isDark) => {
+  try {
+    await AsyncStorage.setItem(DARK_MODE_KEY, JSON.stringify(isDark));
+  } catch (error) {
+    console.error('Error saving dark mode:', error);
+  }
+};
+
+export const loadDarkMode = async () => {
+  try {
+    const data = await AsyncStorage.getItem(DARK_MODE_KEY);
+    return data ? JSON.parse(data) : false;
+  } catch (error) {
+    console.error('Error loading dark mode:', error);
+    return false;
   }
 };
