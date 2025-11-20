@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -9,21 +9,18 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
 import { logoutUser } from '../redux/authSlice';
-import { saveDarkMode, loadDarkMode } from '../utils/storage';
+import { toggleTheme } from '../redux/themeSlice';
+import { colors, spacing, typography, borderRadius, shadows, getTheme } from '../utils/theme';
 
 export default function ProfileScreen() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const [darkMode, setDarkMode] = useState(false);
+  const { isDark } = useSelector((state) => state.theme);
+  const theme = getTheme(isDark);
+  const userName = user?.name || user?.email?.split('@')[0] || 'User';
 
-  useEffect(() => {
-    // Load dark mode preference on mount
-    loadDarkMode().then(setDarkMode);
-  }, []);
-
-  const handleToggleDarkMode = async (value) => {
-    setDarkMode(value);
-    await saveDarkMode(value);
+  const handleToggleDarkMode = () => {
+    dispatch(toggleTheme());
   };
 
   const handleLogout = () => {
@@ -31,25 +28,29 @@ export default function ProfileScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.card }]}>
         <View style={styles.avatarContainer}>
-          <Feather name="user" size={50} color="#007AFF" />
+          <Feather name="user" size={50} color={colors.primary} />
         </View>
-        <Text style={styles.username}>{user?.email || 'User'}</Text>
+        <Text style={[styles.username, { color: theme.text }]}>{userName}</Text>
+        <Text style={[styles.email, { color: theme.textSecondary }]}>{user?.email || user?.username}</Text>
       </View>
 
-      <View style={styles.section}>
+      <View style={[styles.section, { backgroundColor: theme.card }]}>
         <View style={styles.settingItem}>
           <View style={styles.settingLeft}>
-            <Feather name="moon" size={20} color="#333" />
-            <Text style={styles.settingText}>Dark Mode</Text>
+            <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
+              <Feather name="moon" size={20} color={colors.primary} />
+            </View>
+            <Text style={[styles.settingText, { color: theme.text }]}>Dark Mode</Text>
           </View>
           <Switch
-            value={darkMode}
+            value={isDark}
             onValueChange={handleToggleDarkMode}
-            trackColor={{ false: '#767577', true: '#007AFF' }}
-            thumbColor={darkMode ? '#fff' : '#f4f3f4'}
+            trackColor={{ false: '#D1D5DB', true: colors.primary }}
+            thumbColor={isDark ? '#fff' : '#f4f3f4'}
+            ios_backgroundColor="#D1D5DB"
           />
         </View>
       </View>
@@ -65,66 +66,72 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
-    padding: 20,
+    padding: spacing.xl,
   },
   header: {
     alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 30,
+    padding: spacing.xxl,
+    borderRadius: borderRadius.xl,
+    marginBottom: spacing.xl,
+    ...shadows.medium,
   },
   avatarContainer: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#E8F4FF',
+    backgroundColor: colors.primary + '20',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: spacing.lg,
   },
   username: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+    ...typography.h2,
+    marginBottom: spacing.xs,
+  },
+  email: {
+    ...typography.body,
   },
   section: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderRadius: borderRadius.lg,
+    marginBottom: spacing.xl,
+    ...shadows.medium,
   },
   settingItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 15,
+    padding: spacing.lg,
   },
   settingLeft: {
     flexDirection: 'row',
     alignItems: 'center',
   },
+  iconContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: borderRadius.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: spacing.md,
+  },
   settingText: {
-    fontSize: 16,
-    marginLeft: 15,
-    color: '#333',
+    ...typography.body,
+    fontWeight: '500',
   },
   logoutButton: {
-    backgroundColor: '#FF3B30',
+    backgroundColor: colors.danger,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 15,
-    borderRadius: 12,
+    padding: spacing.lg,
+    borderRadius: borderRadius.lg,
     marginTop: 'auto',
+    ...shadows.medium,
   },
   logoutText: {
     color: '#fff',
-    fontSize: 16,
+    ...typography.body,
     fontWeight: 'bold',
-    marginLeft: 10,
+    marginLeft: spacing.sm,
   },
 });
