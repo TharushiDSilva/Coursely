@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Switch,
+  ScrollView,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
@@ -27,109 +28,207 @@ export default function ProfileScreen() {
     dispatch(logoutUser());
   };
 
+  const settingsOptions = [
+    {
+      id: 'darkmode',
+      icon: 'moon',
+      title: 'Dark Mode',
+      type: 'toggle',
+      value: isDark,
+      onPress: handleToggleDarkMode,
+      color: colors.purple,
+    },
+    {
+      id: 'notifications',
+      icon: 'bell',
+      title: 'Push Notification',
+      type: 'toggle',
+      value: true,
+      color: colors.primary,
+    },
+    {
+      id: 'email',
+      icon: 'mail',
+      title: 'Email Notification',
+      type: 'toggle',
+      value: false,
+      color: colors.secondary,
+    },
+  ];
+
+  const otherOptions = [
+    {
+      id: 'categories',
+      icon: 'grid',
+      title: 'Preferred Categories',
+      type: 'navigation',
+      color: colors.info,
+    },
+    {
+      id: 'history',
+      icon: 'clock',
+      title: 'Search History',
+      type: 'navigation',
+      color: colors.warning,
+    },
+    {
+      id: 'delete',
+      icon: 'trash-2',
+      title: 'Delete Account',
+      type: 'navigation',
+      color: colors.danger,
+    },
+  ];
+
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <View style={[styles.header, { backgroundColor: theme.card }]}>
+    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+      {/* Profile Header */}
+      <View style={[styles.profileHeader, { backgroundColor: theme.card }]}>
         <View style={styles.avatarContainer}>
-          <Feather name="user" size={50} color={colors.primary} />
-        </View>
-        <Text style={[styles.username, { color: theme.text }]}>{userName}</Text>
-        <Text style={[styles.email, { color: theme.textSecondary }]}>{user?.email || user?.username}</Text>
-      </View>
-
-      <View style={[styles.section, { backgroundColor: theme.card }]}>
-        <View style={styles.settingItem}>
-          <View style={styles.settingLeft}>
-            <View style={[styles.iconContainer, { backgroundColor: colors.primary + '20' }]}>
-              <Feather name="moon" size={20} color={colors.primary} />
-            </View>
-            <Text style={[styles.settingText, { color: theme.text }]}>Dark Mode</Text>
+          <View style={[styles.avatar, { backgroundColor: colors.primary + '20' }]}>
+            <Feather name="user" size={40} color={colors.primary} />
           </View>
-          <Switch
-            value={isDark}
-            onValueChange={handleToggleDarkMode}
-            trackColor={{ false: '#D1D5DB', true: colors.primary }}
-            thumbColor={isDark ? '#fff' : '#f4f3f4'}
-            ios_backgroundColor="#D1D5DB"
-          />
         </View>
+        <Text style={[styles.userName, { color: theme.text }]}>{userName}</Text>
+        <Text style={[styles.userEmail, { color: theme.textSecondary }]}>
+          {user?.email || user?.username}
+        </Text>
       </View>
 
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Feather name="log-out" size={20} color="#fff" />
-        <Text style={styles.logoutText}>Logout</Text>
+      {/* Notifications Settings */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Notifications Settings</Text>
+        {settingsOptions.map((option) => (
+          <View
+            key={option.id}
+            style={[styles.settingCard, { backgroundColor: theme.card, borderColor: theme.border }]}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconBox, { backgroundColor: option.color + '15' }]}>
+                <Feather name={option.icon} size={20} color={option.color} />
+              </View>
+              <Text style={[styles.settingTitle, { color: theme.text }]}>{option.title}</Text>
+            </View>
+            <Switch
+              value={option.value}
+              onValueChange={option.onPress}
+              trackColor={{ false: theme.border, true: colors.purple + '80' }}
+              thumbColor={option.value ? colors.purple : '#f4f3f4'}
+              ios_backgroundColor={theme.border}
+            />
+          </View>
+        ))}
+      </View>
+
+      {/* Other Settings */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, { color: theme.text }]}>Other Settings</Text>
+        {otherOptions.map((option) => (
+          <TouchableOpacity
+            key={option.id}
+            style={[styles.settingCard, { backgroundColor: theme.card, borderColor: theme.border }]}
+          >
+            <View style={styles.settingLeft}>
+              <View style={[styles.iconBox, { backgroundColor: option.color + '15' }]}>
+                <Feather name={option.icon} size={20} color={option.color} />
+              </View>
+              <Text style={[styles.settingTitle, { color: theme.text }]}>{option.title}</Text>
+            </View>
+            <Feather name="chevron-right" size={20} color={theme.textLight} />
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      {/* Logout Button */}
+      <TouchableOpacity
+        style={[styles.logoutButton, { backgroundColor: isDark ? colors.danger + '20' : colors.danger }]}
+        onPress={handleLogout}
+      >
+        <Feather name="log-out" size={20} color={isDark ? colors.danger : '#fff'} />
+        <Text style={[styles.logoutText, { color: isDark ? colors.danger : '#fff' }]}>Logout</Text>
       </TouchableOpacity>
-    </View>
+      
+      <View style={{ height: 40 }} />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: spacing.xl,
   },
-  header: {
+  profileHeader: {
     alignItems: 'center',
-    padding: spacing.xxl,
-    borderRadius: borderRadius.xl,
+    paddingVertical: spacing.xxxl,
+    paddingHorizontal: spacing.xl,
     marginBottom: spacing.xl,
-    ...shadows.medium,
   },
   avatarContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: colors.primary + '20',
-    justifyContent: 'center',
-    alignItems: 'center',
     marginBottom: spacing.lg,
   },
-  username: {
+  avatar: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: colors.primary + '30',
+  },
+  userName: {
     ...typography.h2,
     marginBottom: spacing.xs,
   },
-  email: {
+  userEmail: {
     ...typography.body,
   },
   section: {
-    borderRadius: borderRadius.lg,
+    paddingHorizontal: spacing.xl,
     marginBottom: spacing.xl,
-    ...shadows.medium,
   },
-  settingItem: {
+  sectionTitle: {
+    ...typography.h4,
+    marginBottom: spacing.md,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  settingCard: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: spacing.lg,
+    borderRadius: borderRadius.lg,
+    marginBottom: spacing.md,
+    borderWidth: 1,
   },
   settingLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
-  iconContainer: {
-    width: 40,
-    height: 40,
+  iconBox: {
+    width: 44,
+    height: 44,
     borderRadius: borderRadius.md,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: spacing.md,
   },
-  settingText: {
+  settingTitle: {
     ...typography.body,
     fontWeight: '500',
   },
   logoutButton: {
-    backgroundColor: colors.danger,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     padding: spacing.lg,
-    borderRadius: borderRadius.lg,
-    marginTop: 'auto',
+    borderRadius: borderRadius.xl,
+    marginHorizontal: spacing.xl,
+    marginTop: spacing.lg,
     ...shadows.medium,
   },
   logoutText: {
-    color: '#fff',
     ...typography.body,
     fontWeight: 'bold',
     marginLeft: spacing.sm,
