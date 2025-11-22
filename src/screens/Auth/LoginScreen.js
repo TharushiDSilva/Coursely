@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   StatusBar,
+  Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Formik } from 'formik';
@@ -39,7 +40,7 @@ export default function LoginScreen({ navigation }) {
 
   return (
     <LinearGradient
-      colors={['#11788C', '#1A9DB3', '#11788C']}
+      colors={['#11788C', '#1A9DB3', '#ffffffff']}
       style={styles.container}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
@@ -47,7 +48,11 @@ export default function LoginScreen({ navigation }) {
       <StatusBar barStyle="light-content" backgroundColor="#11788C" />
       <View style={styles.logoContainer}>
         <View style={styles.logoCircle}>
-          <Text style={styles.logoText}>C</Text>
+          <Image 
+            source={require('../../../assets/images/1.png')} 
+            style={styles.logoImage}
+            resizeMode="contain"
+          />
         </View>
         <Text style={styles.appName}>Coursely</Text>
       </View>
@@ -55,7 +60,7 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.formCard}>
         <Text style={styles.title}>Welcome Back</Text>
         <Text style={styles.subtitle}>
-          TharushiD / Sample@123
+    LEARN, GROW AND GLOW
         </Text>
 
       <Formik
@@ -145,12 +150,17 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 15,
     borderWidth: 3,
     borderColor: 'rgba(255, 255, 255, 0.5)',
+    overflow: 'hidden',
+  },
+  logoImage: {
+    width: 70,
+    height: 70,
   },
   logoText: {
     fontSize: 42,
@@ -167,7 +177,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     borderRadius: 24,
     padding: 30,
-    shadowColor: '#000',
+    shadowColor: '#d7d7d7ff',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.3,
     shadowRadius: 20,
@@ -175,20 +185,22 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 28,
+    textAlign: 'center',
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#1E88E5',
+    color: '#1A9DB3',
   },
   subtitle: {
     fontSize: 13,
+    textAlign: 'center',
     color: '#666',
     marginBottom: 25,
   },
   input: {
     backgroundColor: '#F8F9FA',
     borderWidth: 2,
-    borderColor: '#1E88E5',
-    borderRadius: 12,
+    borderColor: '#1A9DB3',
+    borderRadius: 10,
     padding: 16,
     marginBottom: 12,
     fontSize: 16,
@@ -199,8 +211,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F8F9FA',
     borderWidth: 2,
-    borderColor: '#1E88E5',
-    borderRadius: 12,
+    borderColor: '#1A9DB3',
+    borderRadius: 10,
     marginBottom: 12,
   },
   passwordInput: {
@@ -217,8 +229,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: '#000',
-    borderRadius: 12,
+    backgroundColor: '#1A9DB3',
+    borderRadius: 10,
     padding: 16,
     alignItems: 'center',
     marginTop: 10,
@@ -239,7 +251,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   linkText: {
-    color: '#1E88E5',
+    color: '#1A9DB3',
     fontSize: 15,
     fontWeight: '600',
   },

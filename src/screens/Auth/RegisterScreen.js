@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -7,10 +7,14 @@ import {
   StyleSheet,
   ActivityIndicator,
   ScrollView,
+  StatusBar,
+  Image,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
+import { Feather } from '@expo/vector-icons';
 import { registerUser } from '../../redux/authSlice';
 
 const RegisterSchema = Yup.object().shape({
@@ -31,6 +35,8 @@ const RegisterSchema = Yup.object().shape({
 export default function RegisterScreen({ navigation }) {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.auth);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleRegister = async (values) => {
     const result = await dispatch(registerUser(values));
@@ -40,8 +46,31 @@ export default function RegisterScreen({ navigation }) {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Create Account</Text>
+    <LinearGradient
+      colors={['#11788C', '#1A9DB3', '#ffffffff']}
+      style={styles.container}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+    >
+      <StatusBar barStyle="light-content" backgroundColor="#11788C" />
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.logoContainer}>
+          <View style={styles.logoCircle}>
+            <Image 
+              source={require('../../../assets/images/1.png')} 
+              style={styles.logoImage}
+              resizeMode="contain"
+            />
+          </View>
+          <Text style={styles.appName}>Coursely</Text>
+        </View>
+        
+        <View style={styles.formCard}>
+          <Text style={styles.title}>Create Account</Text>
+          <Text style={styles.subtitle}>Join us today!</Text>
 
       <Formik
         initialValues={{ name: '', email: '', password: '', confirmPassword: '' }}
@@ -74,26 +103,50 @@ export default function RegisterScreen({ navigation }) {
               <Text style={styles.errorText}>{errors.email}</Text>
             )}
 
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              onChangeText={handleChange('password')}
-              onBlur={handleBlur('password')}
-              value={values.password}
-              secureTextEntry
-            />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={styles.passwordInput}
+                placeholder="Password"
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                value={values.password}
+                secureTextEntry={!showPassword}
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setShowPassword(!showPassword)}
+              >
+                <Feather
+                  name={showPassword ? 'eye' : 'eye-off'}
+                  size={20}
+                  color="#666"
+                />
+              </TouchableOpacity>
+            </View>
             {errors.password && touched.password && (
               <Text style={styles.errorText}>{errors.password}</Text>
             )}
 
-            <TextInput
-              style={styles.input}
-              placeholder="Confirm Password"
-              onChangeText={handleChange('confirmPassword')}
-              onBlur={handleBlur('confirmPassword')}
-              value={values.confirmPassword}
-              secureTextEntry
-            />
+            <View style={styles.passwordContainer}>
+              <TextInput
+                style={styles.passwordInput}
+                placeholder="Confirm Password"
+                onChangeText={handleChange('confirmPassword')}
+                onBlur={handleBlur('confirmPassword')}
+                value={values.confirmPassword}
+                secureTextEntry={!showConfirmPassword}
+              />
+              <TouchableOpacity
+                style={styles.eyeIcon}
+                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              >
+                <Feather
+                  name={showConfirmPassword ? 'eye' : 'eye-off'}
+                  size={20}
+                  color="#666"
+                />
+              </TouchableOpacity>
+            </View>
             {errors.confirmPassword && touched.confirmPassword && (
               <Text style={styles.errorText}>{errors.confirmPassword}</Text>
             )}
@@ -123,33 +176,99 @@ export default function RegisterScreen({ navigation }) {
           </View>
         )}
       </Formik>
-    </ScrollView>
+      </View>
+      </ScrollView>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scrollContent: {
     flexGrow: 1,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#fff',
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 30,
+  },
+  logoCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    overflow: 'hidden',
+  },
+  logoImage: {
+    width: 60,
+    height: 60,
+  },
+  appName: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#fff',
+    letterSpacing: 1,
+  },
+  formCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 24,
+    padding: 30,
+    shadowColor: '#d7d7d7ff',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+    elevation: 10,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 30,
+    marginBottom: 8,
     textAlign: 'center',
+    color: '#1A9DB3',
+  },
+  subtitle: {
+    fontSize: 13,
+    textAlign: 'center',
+    color: '#666',
+    marginBottom: 25,
   },
   form: {
     width: '100%',
   },
   input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 10,
+    backgroundColor: '#F8F9FA',
+    borderWidth: 2,
+    borderColor: '#1A9DB3',
+    borderRadius: 10,
+    padding: 16,
+    marginBottom: 12,
     fontSize: 16,
+    color: '#2B2D42',
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F8F9FA',
+    borderWidth: 2,
+    borderColor: '#1A9DB3',
+    borderRadius: 10,
+    marginBottom: 12,
+  },
+  passwordInput: {
+    flex: 1,
+    padding: 15,
+    fontSize: 16,
+  },
+  eyeIcon: {
+    padding: 15,
   },
   errorText: {
     color: 'red',
@@ -157,23 +276,30 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: '#007AFF',
-    borderRadius: 8,
-    padding: 15,
+    backgroundColor: '#1A9DB3',
+    borderRadius: 10,
+    padding: 16,
     alignItems: 'center',
     marginTop: 10,
+    shadowColor: '#1E88E5',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+    letterSpacing: 0.5,
   },
   linkContainer: {
     marginTop: 20,
     alignItems: 'center',
   },
   linkText: {
-    color: '#007AFF',
-    fontSize: 14,
+    color: '#1A9DB3',
+    fontSize: 15,
+    fontWeight: '600',
   },
 });
