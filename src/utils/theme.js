@@ -1,5 +1,5 @@
 export const colors = {
-  primary: '#11788C',
+  primary: '#28a2b8ff',
   primaryLight: '#1A9DB3',
   primaryDark: '#0D5A6B',
   secondary: '#F4A261',
@@ -21,20 +21,20 @@ export const colors = {
   border: '#E5E7EB',
   
   // Dark theme
-  backgroundDark: '#1E1E2D',
-  backgroundSecondaryDark: '#2A2A3C',
-  surfaceDark: '#2A2A3C',
-  cardDark: '#2E2E42',
+  backgroundDark: '#000000',
+  backgroundSecondaryDark: '#0A0A0A',
+  surfaceDark: '#6e6e6eff',
+  cardDark: '#1e1e1fff',
   textDark: '#FFFFFF',
-  textSecondaryDark: '#B8B8D1',
+  textSecondaryDark: '#1A9DB3',
   textLightDark: '#8B8BA7',
-  borderDark: '#3A3A52',
+  borderDark: '#2A2A2A',
   
-  heart: '#E63946',
-  star: '#F4A261',
-  purple: '#8B7FFF',
+  heart: '#c54e4eff',
+  star: '#febd88ff',
+  purple: '#66ebffff',
   purpleLight: '#A599FF',
-  purpleDark: '#6B5FDD',
+  purpleDark: '#020202ff',
 };
 
 export const getTheme = (isDark) => ({

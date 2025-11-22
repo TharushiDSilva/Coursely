@@ -16,17 +16,11 @@ export default function Header({ title }) {
     <View style={[styles.container, { backgroundColor: theme.card, borderBottomColor: theme.border }]}>
       <View style={styles.leftSection}>
         <View style={styles.logoContainer}>
-          {/* Replace the logoPlaceholder with your logo image */}
-          {/* Uncomment this after saving your logo: */}
-          {/* <Image 
-            source={require('../../assets/images/logo.png')} 
+          <Image 
+            source={isDark ? require('../../assets/images/2.png') : require('../../assets/images/1.png')} 
             style={styles.logoImage}
             resizeMode="contain"
-          /> */}
-          {/* Remove this placeholder after adding your logo */}
-          <View style={styles.logoPlaceholder}>
-            <Text style={styles.logoText}>C</Text>
-          </View>
+          />
         </View>
         <View>
           <Text style={[styles.greeting, { color: theme.textSecondary }]}>Welcome back,</Text>
@@ -38,13 +32,13 @@ export default function Header({ title }) {
           style={styles.themeButton}
           onPress={() => dispatch(toggleTheme())}
         >
-          <View style={styles.themeIcon}>
-            <Feather name={isDark ? 'sun' : 'moon'} size={20} color={colors.primary} />
+          <View style={[styles.themeIcon, { backgroundColor: isDark ? '#1A1A1A' : colors.primary + '15' }]}>
+            <Feather name={isDark ? 'sun' : 'moon'} size={20} color={isDark ? '#FFF' : colors.primary} />
           </View>
         </TouchableOpacity>
         <TouchableOpacity style={styles.notificationButton}>
-          <View style={styles.notificationIcon}>
-            <Feather name="bell" size={22} color={colors.primary} />
+          <View style={[styles.notificationIcon, { backgroundColor: isDark ? '#000000ff' : colors.primary + '15' }]}>
+            <Feather name="bell" size={22} color={isDark ? '#FFF' : colors.primary} />
             <View style={styles.badge}>
               <Text style={styles.badgeText}>3</Text>
             </View>

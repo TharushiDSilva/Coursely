@@ -25,10 +25,11 @@ export default function CourseCard({ item, onPress, onFav, isFav }) {
           </Text>
           <TouchableOpacity onPress={onFav} style={styles.favButton}>
             <Feather
-              name="heart"
+              name={isFav ? "heart" : "heart"}
               size={20}
-              color={isFav ? colors.heart : colors.textLight}
-              fill={isFav ? colors.heart : 'transparent'}
+              color={isFav ? colors.heart : '#999'}
+              fill={isFav ? colors.heart : 'none'}
+              style={{ opacity: isFav ? 1 : 0.5 }}
             />
           </TouchableOpacity>
         </View>

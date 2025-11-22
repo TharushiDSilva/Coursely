@@ -120,7 +120,7 @@ export default function LoginScreen({ navigation }) {
               style={styles.linkContainer}
             >
               <Text style={styles.linkText}>
-                Don't have an account? Register
+                Do not have an account? Register
               </Text>
             </TouchableOpacity>
           </View>
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#11788C',
+    color: '#1E88E5',
   },
   subtitle: {
     fontSize: 13,
@@ -186,7 +186,8 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#F8F9FA',
-    borderWidth: 0,
+    borderWidth: 2,
+    borderColor: '#1E88E5',
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
@@ -197,6 +198,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F8F9FA',
+    borderWidth: 2,
+    borderColor: '#1E88E5',
     borderRadius: 12,
     marginBottom: 12,
   },
@@ -214,12 +217,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    backgroundColor: '#11788C',
+    backgroundColor: '#000',
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
     marginTop: 10,
-    shadowColor: '#11788C',
+    shadowColor: '#1E88E5',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -229,14 +232,15 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+    letterSpacing: 0.5,
   },
   linkContainer: {
     marginTop: 20,
     alignItems: 'center',
   },
   linkText: {
-    color: '#11788C',
-    fontSize: 14,
+    color: '#1E88E5',
+    fontSize: 15,
     fontWeight: '600',
   },
 });

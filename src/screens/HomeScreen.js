@@ -49,6 +49,9 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header />
+      <View style={[styles.pageHeader, { backgroundColor: theme.background }]}>
+        <Text style={[styles.pageTitle, { color: theme.text }]}>Explore Courses</Text>
+      </View>
       <FlatList
         data={courses}
         keyExtractor={(item) => item.id.toString()}
@@ -72,6 +75,17 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  pageHeader: {
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.sm,
+    alignItems: 'center',
+  },
+  pageTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
   },
   list: {
     paddingVertical: spacing.lg,

@@ -8,6 +8,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import CourseCard from '../components/CourseCard';
+import Header from '../components/Header';
 import { addFavorite, removeFavorite, loadFavoritesFromStorage } from '../redux/favoriteSlice';
 import { colors, spacing, typography, getTheme } from '../utils/theme';
 
@@ -49,6 +50,10 @@ export default function FavoritesScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Header />
+      <View style={[styles.pageHeader, { backgroundColor: theme.background }]}>
+        <Text style={[styles.pageTitle, { color: theme.text }]}>My Favorites</Text>
+      </View>
       <FlatList
         data={favorites}
         keyExtractor={(item) => item.id.toString()}
@@ -70,6 +75,17 @@ export default function FavoritesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  pageHeader: {
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.sm,
+    alignItems: 'center',
+  },
+  pageTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
   },
   list: {
     padding: spacing.lg,

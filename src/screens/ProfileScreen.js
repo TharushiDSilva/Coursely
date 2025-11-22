@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
+import Header from '../components/Header';
 import { logoutUser } from '../redux/authSlice';
 import { toggleTheme } from '../redux/themeSlice';
 import { colors, spacing, typography, borderRadius, shadows, getTheme } from '../utils/theme';
@@ -81,19 +82,24 @@ export default function ProfileScreen() {
   ];
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
-      {/* Profile Header */}
-      <View style={[styles.profileHeader, { backgroundColor: theme.card }]}>
-        <View style={styles.avatarContainer}>
-          <View style={[styles.avatar, { backgroundColor: colors.primary + '20' }]}>
-            <Feather name="user" size={40} color={colors.primary} />
-          </View>
-        </View>
-        <Text style={[styles.userName, { color: theme.text }]}>{userName}</Text>
-        <Text style={[styles.userEmail, { color: theme.textSecondary }]}>
-          {user?.email || user?.username}
-        </Text>
+    <View style={{ flex: 1 }}>
+      <Header />
+      <View style={[styles.pageHeader, { backgroundColor: theme.background }]}>
+        <Text style={[styles.pageTitle, { color: theme.text }]}>My Profile</Text>
       </View>
+      <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+        {/* Profile Header */}
+        <View style={[styles.profileHeader, { backgroundColor: theme.card }]}>
+          <View style={styles.avatarContainer}>
+            <View style={[styles.avatar, { backgroundColor: colors.primary + '20' }]}>
+              <Feather name="user" size={40} color={colors.primary} />
+            </View>
+          </View>
+          <Text style={[styles.userName, { color: theme.text }]}>{userName}</Text>
+          <Text style={[styles.userEmail, { color: theme.textSecondary }]}>
+            {user?.email || user?.username}
+          </Text>
+        </View>
 
       {/* Notifications Settings */}
       <View style={styles.section}>
@@ -149,13 +155,26 @@ export default function ProfileScreen() {
       </TouchableOpacity>
       
       <View style={{ height: 40 }} />
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  pageHeader: {
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.sm,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+  },
+  pageTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
   },
   profileHeader: {
     alignItems: 'center',
