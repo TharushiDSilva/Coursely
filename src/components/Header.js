@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Feather } from '@expo/vector-icons';
 import { colors, spacing, typography, borderRadius, shadows, getTheme } from '../utils/theme';
+import { toggleTheme } from '../redux/themeSlice';
 
 export default function Header({ title }) {
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
   const { isDark } = useSelector((state) => state.theme);
   const theme = getTheme(isDark);
@@ -14,6 +16,14 @@ export default function Header({ title }) {
     <View style={[styles.container, { backgroundColor: theme.card, borderBottomColor: theme.border }]}>
       <View style={styles.leftSection}>
         <View style={styles.logoContainer}>
+          {/* Replace the logoPlaceholder with your logo image */}
+          {/* Uncomment this after saving your logo: */}
+          {/* <Image 
+            source={require('../../assets/images/logo.png')} 
+            style={styles.logoImage}
+            resizeMode="contain"
+          /> */}
+          {/* Remove this placeholder after adding your logo */}
           <View style={styles.logoPlaceholder}>
             <Text style={styles.logoText}>C</Text>
           </View>
@@ -23,14 +33,24 @@ export default function Header({ title }) {
           <Text style={[styles.userName, { color: theme.text }]}>{userName}!</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.notificationButton}>
-        <View style={styles.notificationIcon}>
-          <Feather name="bell" size={22} color={colors.primary} />
-          <View style={styles.badge}>
-            <Text style={styles.badgeText}>3</Text>
+      <View style={styles.rightSection}>
+        <TouchableOpacity 
+          style={styles.themeButton}
+          onPress={() => dispatch(toggleTheme())}
+        >
+          <View style={styles.themeIcon}>
+            <Feather name={isDark ? 'sun' : 'moon'} size={20} color={colors.primary} />
           </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.notificationButton}>
+          <View style={styles.notificationIcon}>
+            <Feather name="bell" size={22} color={colors.primary} />
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>3</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -74,12 +94,38 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
+  logoImage: {
+    width: 48,
+    height: 48,
+    borderRadius: borderRadius.lg,
+  },
   greeting: {
     ...typography.caption,
   },
   userName: {
     ...typography.h4,
     marginTop: 2,
+  },
+  rightSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  themeButton: {
+    position: 'relative',
+  },
+  themeIcon: {
+    width: 46,
+    height: 46,
+    borderRadius: borderRadius.lg,
+    backgroundColor: colors.primary + '15',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   notificationButton: {
     position: 'relative',
