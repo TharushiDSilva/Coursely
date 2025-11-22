@@ -15,7 +15,7 @@ import { colors, spacing, getTheme } from '../utils/theme';
 
 export default function HomeScreen({ navigation }) {
   const dispatch = useDispatch();
-  const { courses, loading } = useSelector((state) => state.courses);
+  const { courses, loading, error } = useSelector((state) => state.courses);
   const favorites = useSelector((state) => state.favorites.items);
   const { isDark } = useSelector((state) => state.theme);
   const theme = getTheme(isDark);
@@ -42,6 +42,26 @@ export default function HomeScreen({ navigation }) {
     return (
       <View style={[styles.centered, { backgroundColor: theme.background }]}>
         <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <Header />
+        <View style={[styles.pageHeader, { backgroundColor: theme.background }]}>
+          <Text style={[styles.pageTitle, { color: theme.text }]}>Explore Courses</Text>
+        </View>
+        <View style={styles.centered}>
+          <Text style={[styles.errorText, { color: theme.text }]}>{error}</Text>
+          <Text 
+            style={[styles.retryButton, { color: colors.primary }]}
+            onPress={() => dispatch(loadCourses())}
+          >
+            Tap to retry
+          </Text>
+        </View>
       </View>
     );
   }
@@ -94,5 +114,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  errorText: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: spacing.md,
+    paddingHorizontal: spacing.xl,
+  },
+  retryButton: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginTop: spacing.sm,
   },
 });

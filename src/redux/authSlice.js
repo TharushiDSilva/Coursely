@@ -1,130 +1,117 @@
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const USER_STORAGE_KEY = '@coursely_user';
+const USER_STORAGE_KEY = 'coursely_user_v1';
 
-// Hardcoded dummy user
-const DUMMY_USER = {
+// Hardcoded dummy user for testing (currently commented out in favor of API)
+/* const DUMMY_USER = {
   username: 'TharushiD',
   password: 'Sample@123',
   name: 'Tharushi De Silva',
   email: 'tharushi@example.com',
-};
+}; */
 
-// Load user from AsyncStorage on app startup
-export const loadUserFromStorage = createAsyncThunk(
-  'auth/loadUserFromStorage',
-  async () => {
-    try {
-      const userData = await AsyncStorage.getItem(USER_STORAGE_KEY);
-      return userData ? JSON.parse(userData) : null;
-    } catch (error) {
-      console.error('Error loading user from storage:', error);
-      return null;
-    }
-  }
-);
-
-// Login user async thunk
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async ({ username, password }, { rejectWithValue }) => {
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
       
-      // Validate against dummy user
-      if (username === DUMMY_USER.username && password === DUMMY_USER.password) {
-        const user = {
-          username: DUMMY_USER.username,
-          name: DUMMY_USER.name,
-          email: DUMMY_USER.email,
-        };
-        
-        // Store user in AsyncStorage
-        await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
-        
-        return user;
-      } else {
-        return rejectWithValue('Invalid username or password');
+      // DummyJSON API call
+      const res = await fetch('https://dummyjson.com/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        return rejectWithValue(data.message || 'Invalid credentials');
       }
-    } catch (error) {
-      return rejectWithValue(error.message);
+
+      const user = {
+        username: data.username,
+        firstName: data.firstName || '',
+        lastName: data.lastName || '',
+        email: data.email || '',
+        token: data.token || '',
+      };
+
+      await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
+      return user;
+    } catch (err) {
+      // Handle network errors
+      if (err.message === 'Network request failed' || err.message.includes('fetch')) {
+        return rejectWithValue('Network error. Please check your internet connection.');
+      }
+      return rejectWithValue(err.message || 'Login failed. Please try again.');
     }
   }
 );
 
-// Register user async thunk
-export const registerUser = createAsyncThunk(
-  'auth/registerUser',
-  async (userData, { rejectWithValue }) => {
+export const loadStoredUser = createAsyncThunk(
+  'auth/loadStoredUser',
+  async (_, { rejectWithValue }) => {
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      return {
-        email: userData.email,
-      };
-    } catch (error) {
-      return rejectWithValue(error.message);
+      const raw = await AsyncStorage.getItem(USER_STORAGE_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (err) {
+      return rejectWithValue(err.message || 'Failed to load user');
     }
   }
 );
+
+export const logoutUser = createAsyncThunk('auth/logoutUser', async () => {
+  await AsyncStorage.removeItem(USER_STORAGE_KEY);
+  return null;
+});
+
+const initialState = {
+  user: null,
+  isLoggedIn: false,
+  loading: false,
+  error: null,
+};
 
 const authSlice = createSlice({
   name: 'auth',
-  initialState: {
-    user: null,
-    isLoggedIn: false,
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {
-    logoutUser: (state) => {
-      state.user = null;
-      state.isLoggedIn = false;
+    // small synchronous helpers if you want them
+    setUser(state, action) {
+      state.user = action.payload;
+      state.isLoggedIn = !!action.payload;
       state.error = null;
-      // Clear AsyncStorage
-      AsyncStorage.removeItem(USER_STORAGE_KEY);
     },
   },
   extraReducers: (builder) => {
     builder
-      // Load user from storage
-      .addCase(loadUserFromStorage.fulfilled, (state, action) => {
-        if (action.payload) {
-          state.user = action.payload;
-          state.isLoggedIn = true;
-        }
-      })
-      // Login
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.isLoggedIn = true;
         state.user = action.payload;
+        state.isLoggedIn = !!action.payload;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || 'Login failed';
       })
-      // Register
-      .addCase(registerUser.pending, (state) => {
-        state.loading = true;
+      .addCase(loadStoredUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.isLoggedIn = !!action.payload;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.user = null;
+        state.isLoggedIn = false;
         state.error = null;
-      })
-      .addCase(registerUser.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload || 'Registration failed';
       });
   },
 });
 
-export const { logoutUser } = authSlice.actions;
+export const { setUser } = authSlice.actions;
 export default authSlice.reducer;

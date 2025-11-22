@@ -3,9 +3,17 @@ import { fetchCourses } from '../api/coursesApi';
 
 export const loadCourses = createAsyncThunk(
   'courses/loadCourses',
-  async () => {
-    const courses = await fetchCourses();
-    return courses;
+  async (_, { rejectWithValue }) => {
+    try {
+      const courses = await fetchCourses();
+      return courses;
+    } catch (err) {
+      // Handle network errors
+      if (err.message === 'Network Error' || err.message.includes('Network request failed')) {
+        return rejectWithValue('Network error. Please check your internet connection.');
+      }
+      return rejectWithValue(err.message || 'Failed to load courses. Please try again.');
+    }
   }
 );
 
@@ -29,7 +37,7 @@ const courseSlice = createSlice({
       })
       .addCase(loadCourses.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message;
+        state.error = action.payload || 'Failed to load courses';
       });
   },
 });

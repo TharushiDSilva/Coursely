@@ -4,13 +4,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'react-native';
 import { store } from './redux/store';
 import AppNavigator from './navigation/AppNavigator';
-import { loadUserFromStorage } from './redux/authSlice';
+import { loadStoredUser } from './redux/authSlice';
 import { loadThemeFromStorage } from './redux/themeSlice';
 
 function AppContent() {
   useEffect(() => {
     // Load user and theme from AsyncStorage on app startup
-    store.dispatch(loadUserFromStorage());
+    store.dispatch(loadStoredUser());
     store.dispatch(loadThemeFromStorage());
   }, []);
 
