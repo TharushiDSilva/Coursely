@@ -3,38 +3,50 @@ export const colors = {
   primaryLight: '#1A9DB3',
   primaryDark: '#0D5A6B',
   secondary: '#F4A261',
-  accent: '#E76F51',
+  accent: '#8B7FFF',
+  accentLight: '#A599FF',
   success: '#2A9D8F',
   danger: '#E63946',
   warning: '#F4A261',
   info: '#457B9D',
   
-  background: '#F8F9FA',
-  backgroundDark: '#1A1A1A',
+  // Light theme
+  background: '#F5F7FA',
+  backgroundSecondary: '#FFFFFF',
   surface: '#FFFFFF',
-  surfaceDark: '#2C2C2C',
   card: '#FFFFFF',
-  cardDark: '#363636',
+  text: '#1E1E2D',
+  textSecondary: '#6B7280',
+  textLight: '#9CA3AF',
+  border: '#E5E7EB',
   
-  text: '#2B2D42',
+  // Dark theme
+  backgroundDark: '#1E1E2D',
+  backgroundSecondaryDark: '#2A2A3C',
+  surfaceDark: '#2A2A3C',
+  cardDark: '#2E2E42',
   textDark: '#FFFFFF',
-  textSecondary: '#6C757D',
-  textSecondaryDark: '#ADB5BD',
-  textLight: '#999999',
-  border: '#DEE2E6',
-  borderDark: '#495057',
+  textSecondaryDark: '#B8B8D1',
+  textLightDark: '#8B8BA7',
+  borderDark: '#3A3A52',
   
   heart: '#E63946',
   star: '#F4A261',
+  purple: '#8B7FFF',
+  purpleLight: '#A599FF',
+  purpleDark: '#6B5FDD',
 };
 
 export const getTheme = (isDark) => ({
   background: isDark ? colors.backgroundDark : colors.background,
+  backgroundSecondary: isDark ? colors.backgroundSecondaryDark : colors.backgroundSecondary,
   surface: isDark ? colors.surfaceDark : colors.surface,
   card: isDark ? colors.cardDark : colors.card,
   text: isDark ? colors.textDark : colors.text,
   textSecondary: isDark ? colors.textSecondaryDark : colors.textSecondary,
+  textLight: isDark ? colors.textLightDark : colors.textLight,
   border: isDark ? colors.borderDark : colors.border,
+  isDark,
 });
 
 export const spacing = {
@@ -83,34 +95,34 @@ export const typography = {
 };
 
 export const borderRadius = {
-  sm: 6,
-  md: 8,
-  lg: 12,
-  xl: 16,
-  xxl: 20,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 20,
+  xxl: 24,
   full: 50,
 };
 
 export const shadows = {
   small: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 2,
+    shadowRadius: 4,
     elevation: 2,
   },
   medium: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
-    shadowRadius: 8,
+    shadowRadius: 12,
     elevation: 4,
   },
   large: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.2,
-    shadowRadius: 12,
+    shadowRadius: 16,
     elevation: 6,
   },
 };

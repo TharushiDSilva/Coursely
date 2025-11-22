@@ -55,7 +55,7 @@ export default function LoginScreen({ navigation }) {
       <View style={styles.formCard}>
         <Text style={styles.title}>Welcome Back</Text>
         <Text style={styles.subtitle}>
-          Use: TharushiD / Sample@123
+          TharushiD / Sample@123
         </Text>
 
       <Formik
